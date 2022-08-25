@@ -110,6 +110,10 @@ def train(dataset_info, data_path="./dataset", save_model_path="./model", batch_
                 valid_acc.append(epoch_acc)
             print(Logging.i('{} Loss: {:.2f} Acc: {:.1f}'.format(phase, epoch_loss, epoch_acc)))
 
+            if epoch % 10 == 0:
+                torch.save(model.state_dict(), os.path.join(save_model_path, f'epoch-{epoch}.pt'))
+                print(Logging.i('Epoch %d model saved - %d / %.1f' % (epoch, best_idx, best_acc)))
+
             if phase == 'valid' and epoch_acc > best_acc:
                 best_idx = epoch
                 best_acc = epoch_acc
@@ -118,6 +122,7 @@ def train(dataset_info, data_path="./dataset", save_model_path="./model", batch_
                 print(Logging.i('==> best model saved - %d / %.1f' % (best_idx, best_acc)))
 
             torch.save(model.state_dict(), os.path.join(save_model_path, 'last.pt'))
+
 
     time_elapsed = time.time() - start_time
     print(Logging.i('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60)))
@@ -134,7 +139,6 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', type=str, default='/dataset/bookcover', help='dataset_path')
     parser.add_argument('--save-model-path', type=str, default='./model', help='model name')
     parser.add_argument('--batch-size', type=int, default=32, help='model name')
-    parser.add_argument('--random-seed', type=int, default=555, help='model name')
     parser.add_argument('--num-epochs', type=int, default=50, help='model name')
 
     opt = parser.parse_args()
@@ -142,7 +146,6 @@ if __name__ == '__main__':
     dataset = opt.dataset
     save_model_path = opt.save_model_path
     batch_size = opt.batch_size
-    random_seed = opt.random_seed
     num_epochs = opt.num_epochs
     print(Logging.i("Argument Info:"))
     print(Logging.s(f"\tdataset info:"))
@@ -154,7 +157,6 @@ if __name__ == '__main__':
     print(Logging.s(f"\tdataset path: {dataset}"))
     print(Logging.s(f"\tsave model path: {save_model_path}"))
     print(Logging.s(f"\tbatch_size: {batch_size}"))
-    print(Logging.s(f"\trandom_seed: {random_seed}"))
     print(Logging.s(f"\tnum_epochs: {num_epochs}"))
 
     print(Logging.i("Training Start"))
@@ -162,5 +164,4 @@ if __name__ == '__main__':
           data_path=dataset,
           save_model_path=save_model_path,
           batch_size=batch_size,
-          random_seed=random_seed,
           num_epochs=num_epochs)
