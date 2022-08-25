@@ -122,7 +122,7 @@ class RenameUtil:
         ldata.append(f"train: {train_path}\n\n")
         ldata.append(f"# number of class\n")
         ldata.append(f"nc: {len(self.filter_eng_class)}\n\n")
-        ldata.append(f"class name\n")
+        ldata.append(f"# class name\n")
         ldata.append(f"names: {self.filter_eng_class}")
 
         write_data(self.data_path, ldata)
@@ -139,8 +139,8 @@ class RenameUtil:
         ldata.append("number of class: {}\n".format(nc))
         ldata.append("original dataset directory: {}\n".format(origin_dir))
         ldata.append("target dataset directory: {}\n\n".format(target_dir))
-        ldata.append("Renamed dataset information")
-        ldata.append("korea class\tenglish class\ttrain\tvalid\ttest".format(nc))
+        ldata.append("Renamed dataset information\n")
+        ldata.append("korea class\tenglish class\ttrain\tvalid\ttest\n".format(nc))
         for i, nb_img in enumerate(self.cls_nb_img):
             ldata.append("{}\t{}\t{}\t{}\t{}\t{}\n".format(
                 self.filter_kor_class[i],
