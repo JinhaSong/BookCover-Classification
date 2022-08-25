@@ -74,7 +74,7 @@ class RenameUtil:
                 if self.debug:
                     print("\nclass image numbers(test, val, train): {0: 5}/{1: 5}/{2: 5}".format(
                         cls_img_counts[0][1],
-                        cls_img_counts[1][1],
+                        cls_img_counts[1][1] - cls_img_counts[0][1],
                         cls_img_counts[2][1]
                     ))
                 for c, cls_img_count in enumerate(cls_img_counts):
@@ -83,15 +83,23 @@ class RenameUtil:
                         origin_img_path = os.path.join(self.origin_dir, kcls, cls_img_list[img_idx])
                         target_img_path = os.path.join(target_cls_dir, "{0:06}.jpg".format(img_idx))
                         shutil.copy(origin_img_path, target_img_path)
-                        if c == 0:
-                            eng_class = self.filter_eng_class[i].ljust(20)
-                        else :
-                            eng_class = " ".ljust(20)
                         if self.debug:
+                            if c == 0:
+                                eng_class = self.filter_eng_class[i].ljust(20)
+                                idx = img_idx
+                                count = cls_img_count[1] - 1
+                            elif c == 1:
+                                eng_class = " ".ljust(20)
+                                idx = img_idx - cls_img_count[0]
+                                count = cls_img_count[1] - cls_img_count[0] - 1
+                            else:
+                                eng_class = " ".ljust(20)
+                                idx = img_idx
+                                count = cls_img_count[1] - 1
                             print("\r{0} {1}: {2: 5}/{3: 5} - copy {4} to {5}".format(
                                     eng_class,
                                     self.dataset_type[c].ljust(5),
-                                    img_idx, cls_img_count[1] - 1,
+                                    idx, count,
                                     origin_img_path.ljust(20), target_img_path
                                 ), end="")
                     if cls_img_count[1] > 0 and self.debug:
