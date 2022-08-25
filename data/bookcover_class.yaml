@@ -1,0 +1,10 @@
+nc: 38
+
+eng_class: ["Adult", "Health_Hobbies_Leisure", "Lifestyle", "Comic", "Parents", "Social_Science", "Novel_Poetry_Play", "Essay", "Art_Pop_Culture",
+             "Humanities", "Religion", "Chatbook", "Fantasy_Martial_Arts", "IT", "Economic_Management", "Romance", "Magazine", "Dictionary_Others", "World_Literary_Collection",
+             "Children", "Travel", "Audio_Book", "Humanity_Literature", "Religion_Epidemiology", "Philosophy", "Study_Book", "Home_Cooking-Beauty", "Science", "Romance_BL",
+             "Military_Original", "Social", "Novel", "Children_Youth", "History", "Foreign_Language", "Self_development", "Good_Parents", "Youth"]
+kor_class: ["19금", "건강,취미,레저", "라이프스타일", "만화", "부모", "사회과학", "소설,시,희곡", "에세이", "예술,대중문화",
+            "인문", "종교", "챗북", "판타지무협", "IT", "경제경영", "로맨스", "매거진", "사전,기타", "세계문학전집",
+            "어린이", "여행", "오디오북", "인문학", "종교,역학", "철학", "학습서", "가정,요리,뷰티", "과학", "로맨스BL",
+            "밀리오리지널", "사회", "소설", "어린이청소년", "역사", "외국어", "자기계발", "좋은부모", "청소년"]
