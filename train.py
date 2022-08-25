@@ -48,7 +48,10 @@ def train(dataset_info, data_path="./dataset", save_model_path="./model", batch_
     dataloaders['valid'] = torch.utils.data.DataLoader(datasets['valid'], batch_size=batch_size, shuffle=False, num_workers=1)
     dataloaders['test'] = torch.utils.data.DataLoader(datasets['test'], batch_size=batch_size, shuffle=False, num_workers=1)
     nb_batch['train'], nb_batch['valid'], nb_batch['test'] = len(dataloaders['train']), len(dataloaders['valid']), len(dataloaders['test'])
-    print(Logging.i('batch_size : %d,  train valid test : %d / %d / %d\n' % (batch_size, nb_batch['train'], nb_batch['valid'], nb_batch['test'])))
+    print(Logging.i('batch_size : %d,  ' % (batch_size)))
+    print(Logging.s('\ttrain dataset batch size(# of image) : %d(%d)' % (nb_batch['train'], nb_batch['train'] * batch_size)))
+    print(Logging.s('\tvalid dataset batch size(# of image) : %d(%d)' % (nb_batch['valid'], nb_batch['valid'] * batch_size)))
+    print(Logging.s('\ttest dataset batch size(# of image)  : %d(%d)' % (nb_batch['test'], nb_batch['test'] * batch_size)))
 
     device = torch.device("cuda:0")  # set gpu
     model = model.to(device)
@@ -108,21 +111,21 @@ def train(dataset_info, data_path="./dataset", save_model_path="./model", batch_
             else:
                 valid_loss.append(epoch_loss)
                 valid_acc.append(epoch_acc)
-            print(Logging.i('{} Loss: {:.2f} Acc: {:.1f}'.format(phase, epoch_loss, epoch_acc)))
+            print(Logging.s('{} Loss: {:.2f} Acc: {:.1f}'.format(phase, epoch_loss, epoch_acc)))
 
             if epoch % 10 == 0:
                 torch.save(model.state_dict(), os.path.join(save_model_path, f'epoch-{epoch}.pt'))
-                print(Logging.i('Epoch %d model saved - %d / %.1f' % (epoch, best_idx, best_acc)))
+                print(Logging.s('Epoch %d model saved' % (epoch)))
 
             if phase == 'valid' and epoch_acc > best_acc:
                 best_idx = epoch
                 best_acc = epoch_acc
                 best_model_wts = copy.deepcopy(model.state_dict())
                 torch.save(model.state_dict(), os.path.join(save_model_path, 'best.pt'))
-                print(Logging.i('==> best model saved - %d / %.1f' % (best_idx, best_acc)))
+                print(Logging.s('Best model saved - %d / %.1f' % (best_idx, best_acc)))
 
             torch.save(model.state_dict(), os.path.join(save_model_path, 'last.pt'))
-
+        print(Logging.s('-' * 20))
 
     time_elapsed = time.time() - start_time
     print(Logging.i('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60)))
@@ -156,8 +159,8 @@ if __name__ == '__main__':
     print(Logging.s(f"\t\tclass name : {dataset_info['names']}"))
     print(Logging.s(f"\tdataset path: {dataset}"))
     print(Logging.s(f"\tsave model path: {save_model_path}"))
-    print(Logging.s(f"\tbatch_size: {batch_size}"))
-    print(Logging.s(f"\tnum_epochs: {num_epochs}"))
+    print(Logging.s(f"\tbatch size: {batch_size}"))
+    print(Logging.s(f"\tnum epochs: {num_epochs}"))
 
     print(Logging.i("Training Start"))
     train(dataset_info=dataset_info,
