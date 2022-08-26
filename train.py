@@ -1,4 +1,4 @@
-import os.path
+import os
 
 import argparse
 
@@ -14,12 +14,15 @@ from efficientnet_pytorch import EfficientNet
 from torch.utils.data import Subset
 from torchvision import transforms
 import torchvision
+from torch.utils.tensorboard import SummaryWriter
 
 from utils import Logging
 from utils.file_utils import read_yaml
+from tqdm import tqdm
 
 
-def train(dataset_info, data_path="./dataset", save_model_path="./model", batch_size=32, random_seed=555, num_epochs=300):
+def train(dataset_info, save_model_path="./model", batch_size=32, random_seed=555, num_epochs=300):
+    writer = SummaryWriter(log_dir=save_model_path)
     image_size = 224
 
     if not os.path.exists(save_model_path):
@@ -28,31 +31,23 @@ def train(dataset_info, data_path="./dataset", save_model_path="./model", batch_
     torch.manual_seed(random_seed)
 
     model = EfficientNet.from_pretrained('efficientnet-b0', num_classes=dataset_info["nc"])
-    bookcover_dataset = torchvision.datasets.ImageFolder(
-        data_path,
-        transforms.Compose([
+    transform = transforms.Compose([
             transforms.Resize((image_size, image_size)),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-        ]))
-    datasets = {}
-    train_idx, tmp_idx = train_test_split(list(range(len(bookcover_dataset))), test_size=0.2, random_state=random_seed)
-    datasets['train'] = Subset(bookcover_dataset, train_idx)
-    tmp_dataset = Subset(bookcover_dataset, tmp_idx)
-    val_idx, test_idx = train_test_split(list(range(len(tmp_dataset))), test_size=0.5, random_state=random_seed)
-    datasets['valid'] = Subset(tmp_dataset, val_idx)
-    datasets['test'] = Subset(tmp_dataset, test_idx)
+        ])
+    train_dataset = torchvision.datasets.ImageFolder(dataset_info["train"], transform=transform)
+    valid_dataset = torchvision.datasets.ImageFolder(dataset_info["val"], transform=transform)
 
+    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=1)
+    valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=batch_size, shuffle=False, num_workers=1)
     dataloaders, nb_batch = {}, {}
-    dataloaders['train'] = torch.utils.data.DataLoader(datasets['train'], batch_size=batch_size, shuffle=True, num_workers=1)
-    dataloaders['valid'] = torch.utils.data.DataLoader(datasets['valid'], batch_size=batch_size, shuffle=False, num_workers=1)
-    dataloaders['test'] = torch.utils.data.DataLoader(datasets['test'], batch_size=batch_size, shuffle=False, num_workers=1)
-    nb_batch['train'], nb_batch['valid'], nb_batch['test'] = len(dataloaders['train']), len(dataloaders['valid']), len(dataloaders['test'])
+    dataloaders['train'] = train_loader
+    dataloaders['valid'] = valid_loader
+    nb_batch['train'], nb_batch['valid'] = len(dataloaders['train']), len(dataloaders['valid'])
     print(Logging.i('batch_size : %d,  ' % (batch_size)))
     print(Logging.s('\ttrain dataset batch size(# of image) : %d(%d)' % (nb_batch['train'], nb_batch['train'] * batch_size)))
     print(Logging.s('\tvalid dataset batch size(# of image) : %d(%d)' % (nb_batch['valid'], nb_batch['valid'] * batch_size)))
-    print(Logging.s('\ttest dataset batch size(# of image)  : %d(%d)' % (nb_batch['test'], nb_batch['test'] * batch_size)))
-
     device = torch.device("cuda:0")  # set gpu
     model = model.to(device)
 
@@ -82,7 +77,7 @@ def train(dataset_info, data_path="./dataset", save_model_path="./model", batch_
 
             running_loss, running_corrects, num_cnt = 0.0, 0, 0
 
-            for i, (inputs, labels) in enumerate(dataloaders[phase]):
+            for i, (inputs, labels) in enumerate(tqdm(dataloaders[phase])):
                 inputs = inputs.to(device)
                 labels = labels.to(device)
 
@@ -108,12 +103,14 @@ def train(dataset_info, data_path="./dataset", save_model_path="./model", batch_
             if phase == 'train':
                 train_loss.append(epoch_loss)
                 train_acc.append(epoch_acc)
+                writer.add_scalar("Loss/train", epoch_loss, epoch_acc)
             else:
                 valid_loss.append(epoch_loss)
                 valid_acc.append(epoch_acc)
+                writer.add_scalar("Loss/valid", epoch_loss, epoch_acc)
             print(Logging.s('{} Loss: {:.2f} Acc: {:.1f}'.format(phase, epoch_loss, epoch_acc)))
 
-            if epoch % 10 == 0:
+            if phase == 'valid' and epoch % 10 == 0:
                 torch.save(model.state_dict(), os.path.join(save_model_path, f'epoch-{epoch}.pt'))
                 print(Logging.s('Epoch %d model saved' % (epoch)))
 
@@ -135,14 +132,16 @@ def train(dataset_info, data_path="./dataset", save_model_path="./model", batch_
     torch.save(model.state_dict(), os.path.join(save_model_path, 'final.pt'))
     print(Logging.i('model saved'))
 
+    writer.flush()
+    writer.close()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset_info', type=str, default='data/bookcover-17.yaml', help='dataset_path')
     parser.add_argument('--dataset', type=str, default='/dataset/bookcover', help='dataset_path')
-    parser.add_argument('--save-model-path', type=str, default='./model', help='model name')
-    parser.add_argument('--batch-size', type=int, default=32, help='model name')
-    parser.add_argument('--num-epochs', type=int, default=50, help='model name')
+    parser.add_argument('--save-model-path', type=str, default='./model', help='model save directory')
+    parser.add_argument('--batch-size', type=int, default=32, help='batch size')
+    parser.add_argument('--num-epochs', type=int, default=50, help='max number of epoch')
 
     opt = parser.parse_args()
     dataset_info = read_yaml(opt.dataset_info)
@@ -164,7 +163,6 @@ if __name__ == '__main__':
 
     print(Logging.i("Training Start"))
     train(dataset_info=dataset_info,
-          data_path=dataset,
           save_model_path=save_model_path,
           batch_size=batch_size,
           num_epochs=num_epochs)
