@@ -17,11 +17,11 @@ import torchvision
 from torch.utils.tensorboard import SummaryWriter
 
 from utils import Logging
-from utils.file_utils import read_yaml
+from utils.file_utils import read_yaml, check_dir
 from tqdm import tqdm
 
 
-def train(dataset_info, save_model_path="./model", batch_size=32, random_seed=555, num_epochs=300):
+def train(dataset_info, model_name='efficientnet-b0', save_model_path="./model", batch_size=32, random_seed=555, num_epochs=300):
     writer = SummaryWriter(log_dir=save_model_path)
     image_size = 224
 
@@ -30,7 +30,7 @@ def train(dataset_info, save_model_path="./model", batch_size=32, random_seed=55
     random.seed(random_seed)
     torch.manual_seed(random_seed)
 
-    model = EfficientNet.from_pretrained('efficientnet-b0', num_classes=dataset_info["nc"])
+    model = EfficientNet.from_pretrained(model_name, num_classes=dataset_info["nc"])
     transform = transforms.Compose([
             transforms.Resize((image_size, image_size)),
             transforms.ToTensor(),
@@ -137,18 +137,23 @@ def train(dataset_info, save_model_path="./model", batch_size=32, random_seed=55
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset_info', type=str, default='data/bookcover-17.yaml', help='dataset_path')
+    parser.add_argument('--dataset_info', type=str, default='data/bookcover-17.yaml', help='dataset_info file path')
+    parser.add_argument('--model-name', type=str, default='efficientnet-b0', help='model name')
     parser.add_argument('--dataset', type=str, default='/dataset/bookcover', help='dataset_path')
-    parser.add_argument('--save-model-path', type=str, default='./model', help='model save directory')
+    parser.add_argument('--save-model-path', type=str, default='weights/efficientnet-b0-bookcover', help='model save directory')
     parser.add_argument('--batch-size', type=int, default=32, help='batch size')
     parser.add_argument('--num-epochs', type=int, default=50, help='max number of epoch')
 
     opt = parser.parse_args()
     dataset_info = read_yaml(opt.dataset_info)
+    model_name = opt.model_name
     dataset = opt.dataset
     save_model_path = opt.save_model_path
     batch_size = opt.batch_size
     num_epochs = opt.num_epochs
+
+    check_dir(save_model_path, with_create=True)
+
     print(Logging.i("Argument Info:"))
     print(Logging.s(f"\tdataset info:"))
     print(Logging.s(f"\t\tnumber of class: {dataset_info['nc']}"))
@@ -156,13 +161,15 @@ if __name__ == '__main__':
     print(Logging.s(f"\t\tval dir  : {dataset_info['val']}"))
     print(Logging.s(f"\t\ttest dir : {dataset_info['test']}"))
     print(Logging.s(f"\t\tclass name : {dataset_info['names']}"))
+    print(Logging.s(f"\tmodel name: {model_name}"))
     print(Logging.s(f"\tdataset path: {dataset}"))
     print(Logging.s(f"\tsave model path: {save_model_path}"))
     print(Logging.s(f"\tbatch size: {batch_size}"))
     print(Logging.s(f"\tnum epochs: {num_epochs}"))
 
     print(Logging.i("Training Start"))
-    train(dataset_info=dataset_info,
+    train(model_name=model_name,
+          dataset_info=dataset_info,
           save_model_path=save_model_path,
           batch_size=batch_size,
           num_epochs=num_epochs)
