@@ -53,7 +53,7 @@ def test(model_path, dataset_info, batch_size=32, model_name='efficientnet-b0'):
 
     print(Logging.i("Result"))
     print(Logging.s("| class                |  top1  |  top5  |"))
-    print(Logging.s("-" * 25))
+    print(Logging.s("-" * 43))
     top1_avg_acc = 0
     top5_avg_acc = 0
     for (top1_classname, top1_correct_count), (top5_classname, top5_correct_count) in zip(top1_pred.items(), top5_pred.items()):
@@ -64,16 +64,19 @@ def test(model_path, dataset_info, batch_size=32, model_name='efficientnet-b0'):
         top5_avg_acc += top5_accuracy
 
         print(Logging.s("| {} | {}% | {}% |".format(str_classname, str(round(top1_accuracy, 1)).ljust(5), str(round(top5_accuracy, 1)).ljust(5))))
+    print(Logging.s("-" * 43))
     print(Logging.s("| {} | {}% | {}% |".format("Average".ljust(20), str(round(top1_avg_acc/len(classes), 1)).ljust(5), str(round(top5_avg_acc/len(classes), 1)).ljust(5))))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument('--model-name', type=str, default='efficientnet-b0', help='model name')
     parser.add_argument('--dataset_info', type=str, default='data/bookcover-17.yaml', help='dataset_path')
     parser.add_argument('--model-path', type=str, default='model/best.pt', help='model name')
     parser.add_argument('--batch-size', type=int, default=32, help='model name')
 
     opt = parser.parse_args()
+    model_name = opt.model_name
     dataset_info = read_yaml(opt.dataset_info)
     batch_size = opt.batch_size
     model_path = opt.model_path
-    test(model_path, dataset_info, batch_size)
+    test(model_name, model_path, dataset_info, batch_size)
