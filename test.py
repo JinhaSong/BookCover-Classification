@@ -79,4 +79,4 @@ if __name__ == '__main__':
     dataset_info = read_yaml(opt.dataset_info)
     batch_size = opt.batch_size
     model_path = opt.model_path
-    test(model_name, model_path, dataset_info, batch_size)
+    test(model_name=model_name, model_path=model_path, dataset_info=dataset_info, batch_size=batch_size)
