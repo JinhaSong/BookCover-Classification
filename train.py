@@ -160,7 +160,6 @@ if __name__ == '__main__':
     print(Logging.s(f"\t\tval dir  : {dataset_info['val']}"))
     print(Logging.s(f"\t\ttest dir : {dataset_info['test']}"))
     print(Logging.s(f"\t\tclass name : {dataset_info['names']}"))
-    print(Logging.s(f"\tdataset path: {dataset}"))
     print(Logging.s(f"\tsave model path: {save_model_path}"))
     print(Logging.s(f"\tbatch size: {batch_size}"))
     print(Logging.s(f"\tnum epochs: {num_epochs}"))
