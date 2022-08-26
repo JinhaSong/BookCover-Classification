@@ -1,10 +1,10 @@
 # Book Cover 17 classification dataset
-test: "/dataset/bookcover/test"
-val: "/dataset/bookcover/val"
-train: "/dataset/bookcover/train"
+test: /dataset/bookcover/test
+val: /dataset/bookcover/val
+train: /dataset/bookcover/train
 
 # number of class
 nc: 17
 
-class name
-names: ['Adult', 'Lifestyle', 'Parents', 'Essay', 'Humanities', 'Religion', 'Fantasy_Martial_Arts', 'Economic_Management', 'Magazine', 'Travel', 'Science', 'Romance_BL', 'Social', 'Novel', 'Children_Youth', 'History', 'Self_development']
+# class name
+names: ['adult', 'lifestyle', 'parents', 'essay', 'humanities', 'religion', 'fantasy_martial_arts', 'economic_management', 'magazine', 'travel', 'science', 'romance_bl', 'social', 'novel', 'children_youth', 'history', 'self_development']
