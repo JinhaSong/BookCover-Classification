@@ -137,7 +137,7 @@ def train(dataset_info, model_name='efficientnet-b0', save_model_path="./model",
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset_info', type=str, default='data/bookcover-17.yaml', help='dataset_info file path')
+    parser.add_argument('--dataset-info', type=str, default='data/bookcover-17.yaml', help='dataset_info file path')
     parser.add_argument('--model-name', type=str, default='efficientnet-b0', help='model name')
     parser.add_argument('--dataset', type=str, default='/dataset/bookcover', help='dataset_path')
     parser.add_argument('--save-model-path', type=str, default='weights/efficientnet-b0-bookcover', help='model save directory')
