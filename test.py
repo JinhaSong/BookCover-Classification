@@ -30,7 +30,8 @@ def test(model_path, dataset_info, batch_size=32, model_name='efficientnet-b0'):
     test_loader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=True, num_workers=1)
     classes = dataset_info["names"]
 
-    correct_pred = {classname: 0 for classname in classes}
+    top1_pred = {classname: 0 for classname in classes}
+    top5_pred = {classname: 0 for classname in classes}
     total_pred = {classname: 0 for classname in classes}
 
     print(Logging.i("Start evaluation"))
@@ -39,19 +40,31 @@ def test(model_path, dataset_info, batch_size=32, model_name='efficientnet-b0'):
             images = images.to(device)
             labels = labels.to(device)
             outputs = model(images)
-            _, predictions = torch.max(outputs, 1)
+            _, predictions = torch.topk(outputs, k=1)
             for label, prediction in zip(labels, predictions):
                 if label == prediction:
-                    correct_pred[classes[label]] += 1
+                    top1_pred[classes[label]] += 1
+
+            _, predictions = torch.topk(outputs, k=5)
+            for label, prediction in zip(labels, predictions):
+                if label in prediction:
+                    top5_pred[classes[label]] += 1
                 total_pred[classes[label]] += 1
 
     print(Logging.i("Result"))
-    print(Logging.s("-" * 20))
-    for i, (classname, correct_count) in enumerate(correct_pred.items()):
-        str_classname = str(classname).ljust(20)
-        accuracy = 100 * float(correct_count) / total_pred[classname]
-        print(Logging.s(f'{str_classname}: {accuracy:.1f} %'))
+    print(Logging.s("| class                |  top1  |  top5  |"))
+    print(Logging.s("-" * 25))
+    top1_avg_acc = 0
+    top5_avg_acc = 0
+    for (top1_classname, top1_correct_count), (top5_classname, top5_correct_count) in zip(top1_pred.items(), top5_pred.items()):
+        str_classname = str(top1_classname).ljust(20)
+        top1_accuracy = 100 * float(top1_correct_count) / total_pred[top1_classname]
+        top5_accuracy = 100 * float(top5_correct_count) / total_pred[top5_classname]
+        top1_avg_acc += top1_accuracy
+        top5_avg_acc += top5_accuracy
 
+        print(Logging.s("| {} | {}% | {}% |".format(str_classname, str(round(top1_accuracy, 1)).ljust(5), str(round(top5_accuracy, 1)).ljust(5))))
+    print(Logging.s("| {} | {}% | {}% |".format("Average".ljust(20), str(round(top1_avg_acc/len(classes), 1)).ljust(5), str(round(top5_avg_acc/len(classes), 1)).ljust(5))))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
