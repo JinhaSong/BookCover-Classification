@@ -6,5 +6,5 @@ train: "/dataset/bookcover/train"
 # number of class
 nc: 17
 
-# class name
+class name
 names: ['Adult', 'Lifestyle', 'Parents', 'Essay', 'Humanities', 'Religion', 'Fantasy_Martial_Arts', 'Economic_Management', 'Magazine', 'Travel', 'Science', 'Romance_BL', 'Social', 'Novel', 'Children_Youth', 'History', 'Self_development']

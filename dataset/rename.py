@@ -4,7 +4,7 @@ from utils.file_utils import *
 
 
 class RenameUtil:
-    def __init__(self, dataset_class_info, origin_dir, target_dir, dataset_ratio, is_filter=False, min_cls_img_nb=1000, debug=False):
+    def __init__(self, dataset_class_info, origin_dir, target_dir, dataset_ratio, is_filter=True, min_cls_img_nb=1000, debug=False):
         self.eng_class = dataset_class_info["eng_class"]
         self.kor_class = dataset_class_info["kor_class"]
         self.nc = dataset_class_info["nc"]
@@ -46,10 +46,11 @@ class RenameUtil:
                     eng_class_path = os.path.join(self.target_dir, dtype, self.eng_class[i])
                     nb_image = len(os.listdir(kor_class_path))
                     if self.is_filter:
-                        if nb_image >= self.min_cls_img_nb and dtype == "train":
-                            self.filter_kor_class.append(self.kor_class[i])
-                            self.filter_eng_class.append(self.eng_class[i])
-                        os.makedirs(eng_class_path)
+                        if nb_image >= self.min_cls_img_nb:
+                            if dtype == "train":
+                                self.filter_kor_class.append(self.kor_class[i])
+                                self.filter_eng_class.append(self.eng_class[i])
+                            os.makedirs(eng_class_path)
                     else:
                         if dtype == "train" :
                             self.filter_kor_class.append(self.kor_class[i])
@@ -81,7 +82,7 @@ class RenameUtil:
                     for img_idx in range(cls_img_count[0], cls_img_count[1]):
                         target_cls_dir = os.path.join(self.target_dir, self.dataset_type[c], self.filter_eng_class[i])
                         origin_img_path = os.path.join(self.origin_dir, kcls, cls_img_list[img_idx])
-                        target_img_path = os.path.join(target_cls_dir, "{0:06}.jpg".format(img_idx))
+                        target_img_path = os.path.join(target_cls_dir, "{0}_{1:06}.jpg".format(self.filter_eng_class[i], img_idx))
                         shutil.copy(origin_img_path, target_img_path)
                         if self.debug:
                             if c == 0:
