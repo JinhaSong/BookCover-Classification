@@ -70,7 +70,7 @@ def test(model_path, dataset_info, batch_size=32, model_name='efficientnet-b0'):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model-name', type=str, default='efficientnet-b0', help='model name')
-    parser.add_argument('--dataset_info', type=str, default='data/bookcover-17.yaml', help='dataset_path')
+    parser.add_argument('--dataset-info', type=str, default='data/bookcover-17.yaml', help='dataset_path')
     parser.add_argument('--model-path', type=str, default='model/best.pt', help='model name')
     parser.add_argument('--batch-size', type=int, default=32, help='model name')
 
