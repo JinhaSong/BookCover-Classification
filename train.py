@@ -139,7 +139,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset-info', type=str, default='data/bookcover-17.yaml', help='dataset_info file path')
     parser.add_argument('--model-name', type=str, default='efficientnet-b0', help='model name')
-    parser.add_argument('--dataset', type=str, default='/dataset/bookcover', help='dataset_path')
     parser.add_argument('--save-model-path', type=str, default='weights/efficientnet-b0-bookcover', help='model save directory')
     parser.add_argument('--batch-size', type=int, default=32, help='batch size')
     parser.add_argument('--num-epochs', type=int, default=50, help='max number of epoch')
@@ -147,7 +146,6 @@ if __name__ == '__main__':
     opt = parser.parse_args()
     dataset_info = read_yaml(opt.dataset_info)
     model_name = opt.model_name
-    dataset = opt.dataset
     save_model_path = opt.save_model_path
     batch_size = opt.batch_size
     num_epochs = opt.num_epochs
