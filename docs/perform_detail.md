@@ -1,4 +1,46 @@
 # 데이터셋 및 모델 별 성능
+## BookCover-48
+| *Kor Class* |        *Eng Class*        | *# of images*  | 
+|:-----------:|:-------------------------:|:--------------:|
+|    19금      |          adult            |      1885      |
+|   건강취미레저    |  health_hobbies-leisure   |       4        |
+|   라이프스타일    |         lifestyle         |      2766      |
+|     만화      |           comic           |       6        |
+|     부모      |          parents          |      1345      |
+|    사회과학     |      social_science       |       18       |
+|    소설시희곡    |     novel_poetry_play     |       26       |
+|     에세이     |           essay           |      4746      |
+|   예술대중문화    |      art_pop_culture      |       2        |
+|     인문      |        humanities         |      4310      |
+|     종교      |         religion          |      2452      |
+|     챗북      |         chatbook          |       2        |
+|   판타지·무협    |   fantasy_martial_arts    |      1063      |
+|     IT      |            it             |      340       |
+|    경제경영     |    economic_management    |      4264      |
+|     로맨스     |          romance          |       3        |
+|     매거진     |         magazine          |      3565      |
+|    사전기타     |     dictionary_others     |       22       |
+|   세계문학전집    | world_literary_collection |      629       |
+|     어린이     |         children          |       1        |
+|     여행      |          travel           |      1227      |
+|    오디오북     |        audio_book         |       10       |
+|     인문학     |     humanities_study      |       11       |
+|    종교역학     |   religion_epidemiology   |      2452      |
+|     철학      |        philosophy         |      921       |
+|     학습서     |        study_book         |       43       |
+|   가정요리뷰티    |    home_cooking_beauty    |       8        |
+|     과학      |          science          |      1151      |
+|   로맨스·BL    |        romance_bl         |      5406      |
+|   밀리오리지널    |     military_original     |      173       |
+|     사회      |          social           |      2372      |
+|     소설      |           novel           |      5191      |
+|   어린이·청소년   |      children_youth       |      5615      |
+|     역사      |          history          |      1615      |
+|     외국어     |     foreign_language      |      689       |
+|    자기계발     |     self_development      |      4551      |
+|    좋은부모     |       good_parents        |       3        |
+|     청소년     |           youth           |       6        |
+
 ## BookCover-17
 | *Kor Class*  | *Eng Class*           | train | val  | test | total | b0 Acc.<br>(top1 / top5) | b1 Acc.<br>(top1 / top5) | b7 Acc.<br>(top1 / top5) |
 |:------------:|:---------------------:|:-----:|:----:|:----:|:-----:|:------------------------:|:------------------------:|:------------------------:|
