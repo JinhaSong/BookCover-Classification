@@ -21,6 +21,7 @@
 * 아래 성능은 bookcover-17 데이터셋 기반이며 epoch 50까지의 best accuracy 모델 기준
 ### 모델 목록
   * 이 프로젝트는 [lukemelas/EfficientNet-PyTorch](https://github.com/lukemelas/EfficientNet-PyTorch) 기반으로 구현되어 있음
+  * Accuracy detail : [docs/perform_detail.md](docs/perform_detail.md)
   
 |    *Name*         |*# Params*| *Top-1 Acc.* | *Top-5 Acc.* |
 |:-----------------:|:--------:|:------------:|:------------:|
