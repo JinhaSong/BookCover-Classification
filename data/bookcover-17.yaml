@@ -8,3 +8,4 @@ nc: 17
 
 # class name
 names: ['adult', 'lifestyle', 'parents', 'essay', 'humanities', 'religion', 'fantasy_martial_arts', 'economic_management', 'magazine', 'travel', 'science', 'romance_bl', 'social', 'novel', 'children_youth', 'history', 'self_development']
+kor_names: ['19금', '라이프스타일', '부모', '에세이', '인문', '종교', '판타지무협', '경제경영', '매거진', '여행', '과학', '로맨스BL', '사회', '소설', '어린이청소년', '역사', '자기계발']

@@ -124,7 +124,8 @@ class RenameUtil:
         ldata.append(f"# number of class\n")
         ldata.append(f"nc: {len(self.filter_eng_class)}\n\n")
         ldata.append(f"# class name\n")
-        ldata.append(f"names: {self.filter_eng_class}")
+        ldata.append(f"names: {self.filter_eng_class}\n")
+        ldata.append(f"kor_names: {self.filter_kor_class}\n")
 
         write_data(self.data_path, ldata)
 
